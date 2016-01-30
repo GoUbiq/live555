@@ -119,7 +119,8 @@ RTPInterface::RTPInterface(Medium* owner, Groupsock* gs)
     fTCPStreams(NULL),
     fNextTCPReadSize(0), fNextTCPReadStreamSocketNum(-1),
     fNextTCPReadStreamChannelId(0xFF), fReadHandlerProc(NULL),
-    fAuxReadHandlerFunc(NULL), fAuxReadHandlerClientData(NULL) {
+    fAuxReadHandlerFunc(NULL), fAuxReadHandlerClientData(NULL)
+    ,ubiqCallback(NULL), callbackData(NULL) {
   // Make the socket non-blocking, even though it will be read from only asynchronously, when packets arrive.
   // The reason for this is that, in some OSs, reads on a blocking socket can (allegedly) sometimes block,
   // even if the socket was previously reported (e.g., by "select()") as having data available.
@@ -209,22 +210,26 @@ void RTPInterface::clearServerRequestAlternativeByteHandler(UsageEnvironment& en
 }
 
 Boolean RTPInterface::sendPacket(unsigned char* packet, unsigned packetSize) {
-  Boolean success = True; // we'll return False instead if any of the sends fail
+  if(ubiqCallback) {
+    ubiqCallback(packet, packetSize, callbackData);
+    return True;
+  } else {
+    Boolean success = True; // we'll return False instead if any of the sends fail
 
-  // Normal case: Send as a UDP packet:
-  if (!fGS->output(envir(), packet, packetSize)) success = False;
+    // Normal case: Send as a UDP packet:
+    if (!fGS->output(envir(), packet, packetSize)) success = False;
 
-  // Also, send over each of our TCP sockets:
-  tcpStreamRecord* nextStream;
-  for (tcpStreamRecord* stream = fTCPStreams; stream != NULL; stream = nextStream) {
-    nextStream = stream->fNext; // Set this now, in case the following deletes "stream":
-    if (!sendRTPorRTCPPacketOverTCP(packet, packetSize,
-				    stream->fStreamSocketNum, stream->fStreamChannelId)) {
-      success = False;
+    // Also, send over each of our TCP sockets:
+    tcpStreamRecord* nextStream;
+    for (tcpStreamRecord* stream = fTCPStreams; stream != NULL; stream = nextStream) {
+      nextStream = stream->fNext; // Set this now, in case the following deletes "stream":
+      if (!sendRTPorRTCPPacketOverTCP(packet, packetSize,
+              stream->fStreamSocketNum, stream->fStreamChannelId)) {
+        success = False;
+      }
     }
+    return success;
   }
-
-  return success;
 }
 
 void RTPInterface

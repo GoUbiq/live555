@@ -1,0 +1,8 @@
+*.o
+*.a
+testProgs/*
+!testProgs/*.*
+testProgs/*.o
+Makefile
+mediaServer/live555MediaServer
+proxyServer/live555ProxyServer

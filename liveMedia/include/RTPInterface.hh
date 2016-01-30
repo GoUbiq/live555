@@ -52,6 +52,8 @@ public:
   unsigned char fStreamChannelId;
 };
 
+typedef void (sendRTPCallback)(unsigned char* packet, unsigned packetSize, void *data);
+
 class RTPInterface {
 public:
   RTPInterface(Medium* owner, Groupsock* gs);
@@ -95,6 +97,9 @@ public:
     // This may be called - *only immediately prior* to deleting this - to prevent our destructor
     // from turning off background reading on the 'groupsock'.  (This is in case the 'groupsock'
     // is also being read from elsewhere.)
+
+  sendRTPCallback *ubiqCallback;
+  void *callbackData;
 
 private:
   // Helper functions for sending a RTP or RTCP packet over a TCP connection:
