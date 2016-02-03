@@ -86,6 +86,11 @@ public:
   }
   unsigned& estimatedBitrate() { return fEstimatedBitrate; } // kbps; usually 0 (i.e., unset)
 
+  void setCustomPacketSender(CustomPacketSender *ubiqCallback, void *data) {
+    fRTPInterface.ubiqCallback = ubiqCallback;
+    fRTPInterface.callbackData = data;
+  }
+
 protected:
   RTPSink(UsageEnvironment& env,
 	  Groupsock* rtpGS, unsigned char rtpPayloadType,

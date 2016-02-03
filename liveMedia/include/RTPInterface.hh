@@ -52,7 +52,7 @@ public:
   unsigned char fStreamChannelId;
 };
 
-typedef void (sendRTPCallback)(unsigned char* packet, unsigned packetSize, void *data);
+typedef void (CustomPacketSender)(unsigned char* packet, unsigned packetSize, void *data);
 
 class RTPInterface {
 public:
@@ -98,7 +98,7 @@ public:
     // from turning off background reading on the 'groupsock'.  (This is in case the 'groupsock'
     // is also being read from elsewhere.)
 
-  sendRTPCallback *ubiqCallback;
+  CustomPacketSender *ubiqCallback;
   void *callbackData;
 
 private:
