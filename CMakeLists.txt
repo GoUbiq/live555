@@ -387,16 +387,27 @@ include_directories(SYSTEM
 	"${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/include"
 )
 
-add_library(live555 SHARED
+if(MSVC)
+	set(variables
+		CMAKE_C_FLAGS_DEBUG
+		CMAKE_C_FLAGS_MINSIZEREL
+		CMAKE_C_FLAGS_RELEASE
+		CMAKE_C_FLAGS_RELWITHDEBINFO
+		CMAKE_CXX_FLAGS_DEBUG
+		CMAKE_CXX_FLAGS_MINSIZEREL
+		CMAKE_CXX_FLAGS_RELEASE
+		CMAKE_CXX_FLAGS_RELWITHDEBINFO
+	)
+	foreach(variable ${variables})
+		if(${variable} MATCHES "/MD")
+			string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+		endif()
+	endforeach()
+endif()
+
+add_library(live555
 	${headers}
 	${sources}
 )
 
-include (GenerateExportHeader)
-GENERATE_EXPORT_HEADER( live555
-	BASE_NAME live555
-	EXPORT_MACRO_NAME live555_EXPORT
-	EXPORT_FILE_NAME live555_Export.h
-	STATIC_DEFINE live555_BUILT_AS_STATIC
-)
 target_link_libraries(live555 Ws2_32)
