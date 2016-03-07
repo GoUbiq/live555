@@ -10,7 +10,6 @@ set (headers
 	${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/include/BasicUsageEnvironment_version.hh
 	${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/include/DelayQueue.hh
 	${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/include/HandlerSet.hh
-	${CMAKE_SOURCE_DIR}/BasicUsageEnvironment/UpgradeLog.htm
 	${CMAKE_SOURCE_DIR}/groupsock/include/GroupEId.hh
 	${CMAKE_SOURCE_DIR}/groupsock/include/Groupsock.hh
 	${CMAKE_SOURCE_DIR}/groupsock/include/GroupsockHelper.hh
