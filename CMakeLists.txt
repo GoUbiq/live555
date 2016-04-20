@@ -402,6 +402,11 @@ if(MSVC)
 			string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
 		endif()
 	endforeach()
+else()
+add_definitions(-DBSD=1)
+add_definitions(-DSOCKLEN_T=socklen_t)
+add_definitions(-DHAVE_SOCKADDR_LEN=1)
+add_definitions(-DTIME_BASE=int)
 endif()
 
 add_library(live555

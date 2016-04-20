@@ -54,6 +54,11 @@ public:
 				 RTPSource* source,
 				 Boolean isSSMSource = False);
 
+  void setCustomPacketSender(CustomPacketSender *ubiqCallback, void *data) {
+    fRTCPInterface.ubiqCallback = ubiqCallback;
+    fRTCPInterface.callbackData = data;
+  }
+
   static Boolean lookupByName(UsageEnvironment& env, char const* instanceName,
                               RTCPInstance*& resultInstance);
 
